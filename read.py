@@ -18,7 +18,7 @@ def read(num):
             i = i + 1
         i = 1
         while i < len(content):
-            if (content[i][len(content[i]) - 2] == ')') | (
+            if (content[i][len(content[i]) - 2] == ')') | (content[i][0] == ')') | (
                     (re.findall(pattern1, content[i]) != []) & (len(content[i]) <= 4)):
                 content[i - 1] = content[i - 1] + content[i]
                 for tag in range(i, (len(content) - 1)):
@@ -30,7 +30,7 @@ def read(num):
             i = i + 1
         i = 0
         while i < len(content) - 1:
-            if (content[i] == content[i + 1]) & (content[i] == content[len(content)-2]):
+            if (content[i] == content[i + 1]) & (content[i] == content[len(content) - 2]):
                 for tag in range(i + 1, len(content)):
                     content[tag] = ''
             i = i + 1
@@ -49,9 +49,28 @@ def read(num):
 def readall():
     with pdfplumber.open('马原题库.pdf') as pdf:
         lens = len(pdf.pages)
-        textall = ''
-        # textall = read(3)
-        for page in range(0, lens - 1):
-            textall = textall + read(page)
+        text_all = ''
+        for page in range(0, lens):
+            text_all = text_all + read(page)
     with open('马原处理.txt', 'w', encoding='utf-8') as resultFile:
-        resultFile.write(textall)
+        resultFile.write(text_all)
+
+
+def split():
+    with open('马原处理.txt', 'r', encoding='utf-8') as txt:
+        texts = txt.read()
+        i = 0
+        all_list = []
+        split_1 = re.compile(
+            r'(正确答案：[A-D]+|正确答案：[√×]|A、[^0-9B-C正]+|B、[^0-9ACD正]+|C、[^0-9ABD正]+|D、[^0-9A-C正]+|[0-9]+[^A-D正√×]+)')
+        # split_1 = re.compile(
+        #     r'(正确答案：[A-D]+|正确答案：[√×]|A、+[^0-9B-C正]+|B、+[^0-9ACD正]+|C、+[^0-9ABD正]+|D、+[^0-9A-C正]+|[0-9]+[^A-D正√×]+)')
+        split_2 = re.compile(r'([A-D]+)')
+        res = re.split(split_1, texts)
+
+        while None in res:  # 判断是否有空值在列表中
+            res.remove(None)  # 如果有就直接通过remove删除
+        while '' in res:  # 判断是否有空值在列表中
+            res.remove('')  # 如果有就直接通过remove删除
+
+        print(res)
