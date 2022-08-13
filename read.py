@@ -1,3 +1,4 @@
+import copy
 import re
 
 import pdfplumber
@@ -9,7 +10,7 @@ def read(num):
         i = 0
         text1 = ''
         text2 = ''
-        pattern1 = re.compile(r'[A-D]')
+        pattern1 = re.compile(r'[A-E]')
         pattern2 = re.compile(r'[1-9]')
         content = [0] * len(first_page.extract_words())
         while i < len(first_page.extract_words()):
@@ -62,15 +63,32 @@ def split():
         i = 0
         all_list = []
         split_1 = re.compile(
-            r'(正确答案：[A-D]+|正确答案：[√×]|A、[^0-9B-C正]+|B、[^0-9ACD正]+|C、[^0-9ABD正]+|D、[^0-9A-C正]+|[0-9]+[^A-D正√×]+)')
-        # split_1 = re.compile(
-        #     r'(正确答案：[A-D]+|正确答案：[√×]|A、+[^0-9B-C正]+|B、+[^0-9ACD正]+|C、+[^0-9ABD正]+|D、+[^0-9A-C正]+|[0-9]+[^A-D正√×]+)')
-        split_2 = re.compile(r'([A-D]+)')
+            r'(正确答案：[A-E]+(?!、)|正确答案：[√×]|A、[^0-9B-CE正]+|B、[^0-9ACDE正]+|C、[^0-9ABDE正]+|D、[^0-9A-CE正]+|[0-9]+[^A-E正√×]+)')
         res = re.split(split_1, texts)
 
         while None in res:  # 判断是否有空值在列表中
             res.remove(None)  # 如果有就直接通过remove删除
         while '' in res:  # 判断是否有空值在列表中
             res.remove('')  # 如果有就直接通过remove删除
+        # print(res)
 
-        print(res)
+        chapter = ''
+        is_chapter = re.compile(r'[0-9A-E正]+')
+        i = 0
+        my_list = []
+        while i < len(res):
+            if re.match(is_chapter, res[i][0]) is None:
+                chapter = res[i]
+                i = i + 1
+                continue
+            elif re.match('[0-9]+', res[i][0]) is not None:
+                if len(my_list) != 0:
+                    all_list.append(copy.deepcopy(my_list))
+                    my_list.clear()
+                my_list.append(chapter)
+                my_list.append(res[i])
+                i = i + 1
+                continue
+            my_list.append(res[i])
+            i = i + 1
+        print(all_list)
