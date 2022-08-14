@@ -15,7 +15,7 @@ def read(num):
         content = [0] * len(first_page.extract_words())
         while i < len(first_page.extract_words()):
             content[i] = first_page.extract_words()[i]['text']
-            # print(content[i])
+            print(content[i])
             i = i + 1
         i = 1
         while i < len(content):
@@ -91,4 +91,5 @@ def split():
                 continue
             my_list.append(res[i])
             i = i + 1
-        print(all_list)
+        # print(all_list)
+        print(read(16))
