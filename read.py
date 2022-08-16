@@ -21,7 +21,7 @@ def read(num):
         count = 0
         # print(content)
         while i < len(content):
-            if (content[i][len(content[i]) - 2] == ')') & (re.findall('[0-9]+、', content[i]) == []) | (
+            if (content[i][len(content[i]) - 2] == ')') & (re.findall('[^()。 ]', content[i]) == []) | (
                     content[i][0] == ')') | (
                     re.findall(pattern1, content[i]) == []):
                 content[i - 1] = content[i - 1] + content[i]

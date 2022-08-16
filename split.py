@@ -116,7 +116,22 @@ def split_2():
             else:
                 true_false.append(copy.deepcopy(all_list[i]))
             i = i + 1
-        print(select)
+        # print(select)
+        i = 0
+        while i < len(select):
+            if len(select[i]) == 7:
+                select[i].append(copy.deepcopy(select[i][6]))
+                select[i][6] = ''
+            i = i + 1
+
+        i = 0
+        while i<len(select):
+            if len(select[i]) > 8:
+                print(select[i])
+            i = i + 1
+
+        # print(select)
+        # print(read(0))
 
         # print(true_false)
         # # 创建数据库连接
@@ -132,5 +147,3 @@ def split_2():
         # # 关闭连接
         # conn.close()
         # cursor.close()
-
-

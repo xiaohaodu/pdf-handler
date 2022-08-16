@@ -44,11 +44,11 @@ def readall_1():
         i = i + 1
     i = len(content_all) - 1
     while i > 0:
-        if (content_all[i] == content_all[i - 1]) & (re.findall('[0-9]+、', content_all[i]) == []) | (
+        if (content_all[i] == content_all[i - 1]) & (re.findall('[^()。 ]', content_all[i]) == []) | (
                 content_all[len(content_all) - 1] == ')'):
             for tag in range(i, len(content_all)):
                 content_all[tag] = ''
-        elif (content_all[i] == content_all[i - 1]) & (re.findall('[0-9]+、', content_all[i]) == []):
+        elif (content_all[i] == content_all[i - 1]) & (re.findall('[^()。 ]', content_all[i]) == []):
             for tag in range(i, len(content_all)):
                 content_all[tag] = ''
         i = i - 1
