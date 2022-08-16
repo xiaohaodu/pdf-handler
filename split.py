@@ -106,8 +106,20 @@ def split_2():
                 continue
             my_list.append(res[i])
             i = i + 1
-        print(all_list)
-        # 创建数据库连接
+        # print(all_list)
+        select = []
+        true_false = []
+        i = 0
+        while i < len(all_list):
+            if all_list[i][0][0] != '判':
+                select.append(copy.deepcopy(all_list[i]))
+            else:
+                true_false.append(copy.deepcopy(all_list[i]))
+            i = i + 1
+        print(select)
+
+        # print(true_false)
+        # # 创建数据库连接
         # conn = pymysql.connect(host="localhost", port=3306, user="root", passwd="187139", db="mayuan")
         # # 获取一个游标对象
         # cursor = conn.cursor()
