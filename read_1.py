@@ -41,15 +41,15 @@ def readall_1():
             for tag in range(i + 1, (len(content_all) - 1)):
                 content_all[tag] = content_all[tag + 1]
         i = i + 1
-    i = 0
-    while i < len(content_all) - 1:
-        if (content_all[i] == content_all[i + 1]) & (content_all[i] == content_all[len(content_all) - 2]) & (content_all[i] == '))'):
+    i = len(content_all) - 1
+    while i > 0:
+        if (content_all[i] == content_all[i - 1]) | (content_all[len(content_all)-1] == ')'):
             for tag in range(i, len(content_all)):
                 content_all[tag] = ''
-        elif (content_all[i] == content_all[i + 1]) & (content_all[i] == content_all[len(content_all) - 2]):
-            for tag in range(i + 1, len(content_all)):
+        elif content_all[i] == content_all[i - 1]:
+            for tag in range(i, len(content_all)):
                 content_all[tag] = ''
-        i = i + 1
+        i = i - 1
     i = 0
     while i < len(content_all):
         if content_all[i] != '':

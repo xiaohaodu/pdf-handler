@@ -1,7 +1,7 @@
 import re
 import sys
 
-from read import readall
+from read import readall, read
 from read_1 import readall_1
 from split import split, split_2
 
