@@ -117,6 +117,27 @@ def split_2():
                 true_false.append(copy.deepcopy(all_list[i]))
             i = i + 1
         # print(select)
+
+        i = 0
+        while i < len(select):
+            if len(select[i]) == 5:
+                select[i].append(copy.deepcopy(select[i][4]))
+                select[i][4] = ''
+                select[i].append(copy.deepcopy(select[i][5]))
+                select[i][5] = ''
+                select[i].append(copy.deepcopy(select[i][6]))
+                select[i][6] = ''
+            i = i + 1
+
+        i = 0
+        while i < len(select):
+            if len(select[i]) == 6:
+                select[i].append(copy.deepcopy(select[i][5]))
+                select[i][5] = ''
+                select[i].append(copy.deepcopy(select[i][6]))
+                select[i][6] = ''
+            i = i + 1
+
         i = 0
         while i < len(select):
             if len(select[i]) == 7:
@@ -125,25 +146,62 @@ def split_2():
             i = i + 1
 
         i = 0
-        while i<len(select):
-            if len(select[i]) > 8:
-                print(select[i])
+        while i < len(select):
+            if select[i][len(select[i]) - 1][len(select[i][len(select[i]) - 1]) - 1] == '：':
+                select.remove(copy.deepcopy(select[i]))
             i = i + 1
 
-        # print(select)
-        # print(read(0))
+        i = 0
+        while i < len(select):
+            if len(select[i]) != 8:
+                select.remove(copy.deepcopy(select[i]))
+            i = i + 1
 
+        i = 0
+        while i < len(select):
+            select[i][7] = select[i][7].split('：')[1]
+            i = i + 1
+
+        i = 0
+        while i < len(true_false):
+            true_false[i][2] = true_false[i][2].split('：')[1]
+            if true_false[i][2] == '×':
+                true_false[i][2] = 0
+            else:
+                true_false[i][2] = 1
+            i = i + 1
+
+        # i = 0
+        # while i < len(select):
+        #     if len(select[i]) != 8:
+        #         print(select[i])
+        #     i = i + 1
+
+        # i = 0
+        # while i < len(true_false):
+        #     if len(true_false[i]) != 3:
+        #         print(true_false[i])
+        #     i = i + 1
+
+        # print(select)
         # print(true_false)
-        # # 创建数据库连接
-        # conn = pymysql.connect(host="localhost", port=3306, user="root", passwd="187139", db="mayuan")
-        # # 获取一个游标对象
-        # cursor = conn.cursor()
-        # # 设置参数i，for语句循环
-        # for i in range(1, len(all_list)):
-        #     param = str(i)
-        #     sql = "insert into questionbank(chapter,question,selectA,selectB,selectC,selectD,selectE,isSelect,true_or_false,) values(%s,%s,%s)"
-        #     cursor.execute(sql, param)
-        #     conn.commit()
-        # # 关闭连接
-        # conn.close()
-        # cursor.close()
+
+        # 创建数据库连接
+        conn = pymysql.connect(host="localhost", port=3306, user="root", passwd="187139", db="mayuan")
+        # 获取一个游标对象
+        cursor = conn.cursor()
+        # 设置参数i，for语句循环
+        cursor.execute('delete from questionbank')
+        for i in range(0, len(select)):
+            param = select[i]
+            sql = "insert into questionbank(chapter,question,selectA,selectB,selectC,selectD,selectE,isSelect) values(%s,%s,%s,%s,%s,%s,%s,%s)"
+            cursor.execute(sql, param)
+
+        for i in range(0, len(true_false)):
+            param = true_false[i]
+            sql = "insert into questionbank(chapter,question,true_or_false) values(%s,%s,%s)"
+            cursor.execute(sql, param)
+            conn.commit()
+        # 关闭连接
+        conn.close()
+        cursor.close()

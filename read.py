@@ -46,7 +46,7 @@ def read(num):
                 else:
                     break
                 i = i - 1
-            if len(content[i]) > 2:
+            if len(content[i]) >= 2:
                 if content[i][len(content[i]) - 2] == ')':
                     content[i] = ''
             if i > 0 & len(content[i]) > 0:
