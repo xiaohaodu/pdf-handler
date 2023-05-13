@@ -1,51 +1,10 @@
 import copy
 import re
-
 import pymysql
 
-from read import read
-from read_1 import read_1
 
-
-def split():
-    with open('马原处理.txt', 'r', encoding='utf-8') as txt:
-        texts = txt.read()
-        i = 0
-        all_list = []
-        split_1 = re.compile(
-            r'(正确答案：[A-E]+(?!、)|正确答案：[√×]|[0-9]+[^A-E正√×]+|[A-E]、[^0-9A-E正]*[0-9]*[万]*元[^0-9A-E正]*[^0-9A-E正]*[0-9]*[万]*元[^0-9A-E正]*|[A-E]、[^0-9A-E正]*[0-9]*[万]*元[^0-9A-E正]*|[A-E]、[^0-9A-E正]*[0-9]{4}[^0-9A-E正]+|[A-E]、[^0-9A-E正]*[0-9]{2}年代[^0-9A-E正]+|[A-E]、[^0-9A-E正]+)')
-        res = re.split(split_1, texts)
-
-        while None in res:  # 判断是否有空值在列表中
-            res.remove(None)  # 如果有就直接通过remove删除
-        while '' in res:  # 判断是否有空值在列表中
-            res.remove('')  # 如果有就直接通过remove删除
-        # print(res)
-
-        chapter = ''
-        is_chapter = re.compile(r'[0-9A-E正]+')
-        i = 0
-        my_list = []
-        while i < len(res):
-            if re.match(is_chapter, res[i][0]) is None:
-                chapter = res[i]
-                i = i + 1
-                continue
-            elif re.match('[0-9]+', res[i][0]) is not None:
-                if len(my_list) != 0:
-                    all_list.append(copy.deepcopy(my_list))
-                    my_list.clear()
-                my_list.append(chapter)
-                my_list.append(res[i])
-                i = i + 1
-                continue
-            my_list.append(res[i])
-            i = i + 1
-        print(all_list)
-
-
-def split_2():
-    with open('马原处理.txt', 'r', encoding='utf-8') as txt:
+def split(chackname):
+    with open(chackname, 'r', encoding='utf-8') as txt:
         texts = txt.read()
         all_list = []
         pattern1 = re.compile(r'[^A-E]')
@@ -165,43 +124,28 @@ def split_2():
         i = 0
         while i < len(true_false):
             true_false[i][2] = true_false[i][2].split('：')[1]
-            if true_false[i][2] == '×':
-                true_false[i][2] = 0
-            else:
-                true_false[i][2] = 1
             i = i + 1
 
-        # i = 0
-        # while i < len(select):
-        #     if len(select[i]) != 8:
-        #         print(select[i])
-        #     i = i + 1
-
-        # i = 0
-        # while i < len(true_false):
-        #     if len(true_false[i]) != 3:
-        #         print(true_false[i])
-        #     i = i + 1
-
-        # print(select)
-        # print(true_false)
+        # print(all_list)
 
         # 创建数据库连接
         conn = pymysql.connect(host="localhost", port=3306, user="root", passwd="187139", db="mayuan")
         # 获取一个游标对象
         cursor = conn.cursor()
         # 设置参数i，for语句循环
-        cursor.execute('delete from questionbank')
+        cursor.execute("delete from questionbank where book='马克思主义基本原理'")
+        cursor.execute("alter table questionbank auto_increment 1")
         for i in range(0, len(select)):
             param = select[i]
-            sql = "insert into questionbank(chapter,question,selectA,selectB,selectC,selectD,selectE,isSelect) values(%s,%s,%s,%s,%s,%s,%s,%s)"
+            sql = "insert into questionbank(book,chapter,question,selectA,selectB,selectC,selectD,selectE,isSelect) values('马克思主义基本原理',%s,%s,%s,%s,%s,%s,%s,%s)"
             cursor.execute(sql, param)
 
         for i in range(0, len(true_false)):
             param = true_false[i]
-            sql = "insert into questionbank(chapter,question,true_or_false) values(%s,%s,%s)"
+            sql = "insert into questionbank(book,chapter,question,selectA,selectB,isSelect) values('马克思主义基本原理',%s,%s,'√','×',%s)"
             cursor.execute(sql, param)
-            conn.commit()
+        # 提交到数据库执行
+        conn.commit()
         # 关闭连接
         conn.close()
         cursor.close()

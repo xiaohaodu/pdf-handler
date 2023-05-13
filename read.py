@@ -1,11 +1,10 @@
 import copy
 import re
-
 import pdfplumber
 
 
-def read(num):
-    with pdfplumber.open('马原题库.pdf') as pdf:
+def read(filename, num):
+    with pdfplumber.open(filename) as pdf:
         first_page = pdf.pages[num]
         i = 0
         text1 = ''
@@ -69,11 +68,48 @@ def read(num):
         return text
 
 
-def readall():
-    with pdfplumber.open('马原题库.pdf') as pdf:
+def readall(readname,outputname):
+    with pdfplumber.open(readname) as pdf:
         lens = len(pdf.pages)
-        text_all = ''
+        content_all = []
         for page in range(0, lens):
-            text_all = text_all + read(page)
-    with open('马原处理.txt', 'w', encoding='utf-8') as resultFile:
-        resultFile.write(text_all)
+            content_all.append(copy.deepcopy(read(readname,page)))
+            content_all.append(copy.deepcopy("  "))
+    text1 = ''
+    text2 = ''
+    pattern1 = re.compile(r'[^A-E]')
+    pattern2 = re.compile(r'[^1-9]')
+    i = 1
+    while i < len(content_all):
+        if (content_all[i][len(content_all[i]) - 2] == ')') & (re.findall('[0-9]+、', content_all[i]) == []) | (
+                content_all[i][0] == ')') | (
+                re.findall(pattern1, content_all[i]) == []):
+            content_all[i - 1] = content_all[i - 1] + content_all[i]
+            for tag in range(i, (len(content_all) - 1)):
+                content_all[tag] = content_all[tag + 1]
+        if not re.findall(pattern2, content_all[i]):
+            content_all[i] = content_all[i] + content_all[i + 1]
+            for tag in range(i + 1, (len(content_all) - 1)):
+                content_all[tag] = content_all[tag + 1]
+        i = i + 1
+    i = len(content_all) - 1
+    while i > 0:
+        if (content_all[i] == content_all[i - 1]) & (re.findall('[^()。 ]', content_all[i]) == []) | (
+                content_all[len(content_all) - 1] == ')'):
+            for tag in range(i, len(content_all)):
+                content_all[tag] = ''
+        elif (content_all[i] == content_all[i - 1]) & (re.findall('[^()。 ]', content_all[i]) == []):
+            for tag in range(i, len(content_all)):
+                content_all[tag] = ''
+        i = i - 1
+    i = 0
+    while i < len(content_all):
+        if content_all[i] != '':
+            if i % 2 == 0:
+                text1 = text1 + content_all[i]
+            else:
+                text2 = text2 + content_all[i]
+        i = i + 1
+    text = text1 + text2
+    with open(outputname, 'w', encoding='utf-8') as resultFile:
+        resultFile.write(text)
