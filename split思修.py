@@ -7,8 +7,8 @@ def split(split_name):
     with open(split_name, 'r', encoding='utf-8') as txt:
         texts = txt.read().replace("\xa0", "")
         split_reg = re.compile(
-            r'([（(][A-Z]+[）)]|[A-Z]|[一二三四五六七八九十][、,，]|[0-9]+[．.、]|(?:绪论|第[一二三四五六七八九十]章)[^一二三四五六七八九十A-Z0-9]*)')
-        split2 = re.compile(r'([A-Z]|[一二三四五六七八九十][、,，]|[0-9]+[．.、])')
+            r'([（(][A-Z]+[）)]|[A-Z]|[一二三四五六七八九十]、|[0-9]+[．.、]|(?:绪论|第[一二三四五六七八九十]章)[^一二三四五六七八九十A-Z0-9]*)')
+        split2 = re.compile(r'([A-Z]|[一二三四五六七八九十]、|[0-9]+[．.、])')
         split3 = re.compile(r'([（(][A-Z]+[）)])')
         split4 = re.compile(r'([A-Z])')
         texts = re.split(split_reg, texts)
@@ -28,7 +28,7 @@ def split(split_name):
                 del texts[index]
 
         split5 = re.compile(r'((?:绪论|第[一二三四五六七八九十]章)[^一二三四五六七八九十A-Z0-9]*)')
-        split6 = re.compile(r'([一二三四五六七八九十][、,，][^一二三四五六七八九十A-Z0-9]*)')
+        split6 = re.compile(r'([一二三四五六七八九十]、[^一二三四五六七八九十A-Z0-9]*)')
         split7 = re.compile(r'([0-9]+[．.、])')
         split8 = re.compile(r'([A-Z])')
         chapter = ''
