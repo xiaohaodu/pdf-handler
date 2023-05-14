@@ -126,7 +126,14 @@ def split(chackname):
             true_false[i][2] = true_false[i][2].split('：')[1]
             i = i + 1
 
-        # print(all_list)
+        for index, v in enumerate(select):
+            if len(v[-1]) > 1:
+                select[index].insert(1, '多选')
+            else:
+                select[index].insert(1, '单选')
+        # all_list[0].insert(1, '55')
+        for index, v in enumerate(true_false):
+            true_false[index].insert(1, '判断题')
 
         # 创建数据库连接
         conn = pymysql.connect(host="localhost", port=3306, user="root", passwd="187139", db="mayuan")
@@ -137,12 +144,12 @@ def split(chackname):
         cursor.execute("alter table questionbank auto_increment 1")
         for i in range(0, len(select)):
             param = select[i]
-            sql = "insert into questionbank(book,chapter,question,selectA,selectB,selectC,selectD,selectE,isSelect) values('马克思主义基本原理',%s,%s,%s,%s,%s,%s,%s,%s)"
+            sql = "insert into questionbank(book,chapter,question_type,question,selectA,selectB,selectC,selectD,selectE,isSelect) values('马克思主义基本原理',%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             cursor.execute(sql, param)
 
         for i in range(0, len(true_false)):
             param = true_false[i]
-            sql = "insert into questionbank(book,chapter,question,selectA,selectB,isSelect) values('马克思主义基本原理',%s,%s,'√','×',%s)"
+            sql = "insert into questionbank(book,chapter,question_type,question,selectA,selectB,isSelect) values('马克思主义基本原理',%s,%s,%s,'√','×',%s)"
             cursor.execute(sql, param)
         # 提交到数据库执行
         conn.commit()

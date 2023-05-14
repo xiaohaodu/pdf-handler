@@ -7,8 +7,8 @@ def split(split_name):
     with open(split_name, 'r', encoding='utf-8') as txt:
         texts = txt.read().replace("\xa0", "")
         split_reg = re.compile(
-            r'([（(][A-Z]+[）)]|[A-Z]|[一二三四五六七八九十]、|[0-9]+[．.、]|(?:绪论|第[一二三四五六七八九十]章)[^一二三四五六七八九十A-Z0-9]*)')
-        split2 = re.compile(r'([A-Z]|[一二三四五六七八九十]、|[0-9]+[．.、])')
+            r'([（(][A-Z]+[）)]|[A-Z]|[一二三四五六七八九十][、,，]|[0-9]+[．.、]|(?:绪论|第[一二三四五六七八九十]章)[^一二三四五六七八九十A-Z0-9]*)')
+        split2 = re.compile(r'([A-Z]|[一二三四五六七八九十][、,，]|[0-9]+[．.、])')
         split3 = re.compile(r'([（(][A-Z]+[）)])')
         split4 = re.compile(r'([A-Z])')
         texts = re.split(split_reg, texts)
@@ -19,7 +19,7 @@ def split(split_name):
                 texts[index] += texts[index + 1]
                 del texts[index + 1]
         for index in range(len(texts) - 1, -1, -1):
-            if re.match(split3, texts[index]) and re.match(split4, texts[index + 1]) is None:
+            if re.search(split3, texts[index]) and re.match(split4, texts[index + 1]) is None:
                 texts[index] += texts[index + 1]
                 del texts[index + 1]
         for index in range(len(texts) - 1, -1, -1):
@@ -28,7 +28,7 @@ def split(split_name):
                 del texts[index]
 
         split5 = re.compile(r'((?:绪论|第[一二三四五六七八九十]章)[^一二三四五六七八九十A-Z0-9]*)')
-        split6 = re.compile(r'([一二三四五六七八九十]、[^一二三四五六七八九十A-Z0-9]*)')
+        split6 = re.compile(r'([一二三四五六七八九十][、,，][^一二三四五六七八九十A-Z0-9]*)')
         split7 = re.compile(r'([0-9]+[．.、])')
         split8 = re.compile(r'([A-Z])')
         chapter = ''
@@ -48,10 +48,12 @@ def split(split_name):
                 list.append(value)
             elif re.match(split8, value):
                 list.append(value)
+
         del all_list[0]
         split9 = re.compile(r'([A-Z]+)')
         for index, v in enumerate(all_list):
-            is_select = re.search(split9, all_list[index][2]).group()
+            is_select = re.search(split9, all_list[index][2]).group() if re.search(split9,
+                                                                                   all_list[index][2]) else is_select
             all_list[index][2] = re.sub(split9, '', all_list[index][2])
             all_list[index].append(is_select)
 
@@ -66,7 +68,7 @@ def split(split_name):
         # for index, v in enumerate(all_list):
         #     if len(v) != 9:
         #         print(v)
-        # print(all_list)
+        # print(texts)
 
         # 创建数据库连接
         conn = pymysql.connect(host="localhost", port=3306, user="root", passwd="187139", db="mayuan")
