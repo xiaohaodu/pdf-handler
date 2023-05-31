@@ -10,7 +10,9 @@ def readWSN():
         txt[i] = txt[i].replace('\n', '')
     txt = [txt[i:i + 4] for i in range(0, len(txt), 4)]
     for i in range(0, len(txt)):
-        txt[i][3] = txt[i][3][-1]
+        txt[i][3] = txt[i][3][-1].replace('A', '√').replace('B', '×')
+        txt[i][1] = '√'
+        txt[i][2] = '×'
     # 创建数据库连接
     conn = pymysql.connect(host="localhost", port=3306, user="root", passwd="187139", db="mayuan")
     # 获取一个游标对象
@@ -86,4 +88,4 @@ def readWSN3():
     conn.close()
 
 
-readWSN3()
+readWSN()
