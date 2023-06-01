@@ -7,7 +7,7 @@ def readWSN():
     for i, v in enumerate(txt):
         if txt[i].isspace():
             del txt[i]
-        txt[i] = txt[i].replace('\n', '')
+        txt[i] = txt[i].replace('\n', '').replace('a', 'A').replace('b', 'B').replace('c', 'C').replace('d', 'D')
     txt = [txt[i:i + 4] for i in range(0, len(txt), 4)]
     for i in range(0, len(txt)):
         txt[i][3] = txt[i][3][-1].replace('A', '√').replace('B', '×')
@@ -37,7 +37,7 @@ def readWSN2():
     for i, v in enumerate(txt):
         if txt[i].isspace():
             del txt[i]
-        txt[i] = txt[i].replace('\n', '')
+        txt[i] = txt[i].replace('\n', '').replace('a', 'A').replace('b', 'B').replace('c', 'C').replace('d', 'D')
     txt = [txt[i:i + 6] for i in range(0, len(txt), 6)]
     for i in range(0, len(txt)):
         txt[i][-1] = txt[i][-1][-1]
@@ -65,10 +65,10 @@ def readWSN3():
     for i, v in enumerate(txt):
         if txt[i].isspace():
             del txt[i]
-        txt[i] = txt[i].replace('\n', '')
+        txt[i] = txt[i].replace('\n', '').replace('a', 'A').replace('b', 'B').replace('c', 'C').replace('d', 'D')
     txt = [txt[i:i + 6] for i in range(0, len(txt), 6)]
     for i in range(0, len(txt)):
-        txt[i][-1] = txt[i][-1][-1]
+        txt[i][-1] = txt[i][-1][5:]
 
     # 创建数据库连接
     conn = pymysql.connect(host="localhost", port=3306, user="root", passwd="187139", db="mayuan")
